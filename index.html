@@ -5,53 +5,83 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sadhana Breath Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
 <style>
-:root{ /* phone-first, single light instrument theme: white graph panes on cool grey; blue = breath, rose = voice */
-  --paper:#e9edec; --panel:#f7f9f8; --ink:#17222b; --muted:#5a6870; --line:#d3dbd9; --breath:#1c5fa5; --voice:#b3305f; --warn:#c2410c;
-  --display:"Newsreader",Georgia,serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+:root{ /* layout: one calm column; a dusk-indigo hero, white cards; saffron = breath, violet = voice, green/amber/rose = verdicts */
+  --bg:#eef0f6; --card:#ffffff; --ink:#1d2033; --muted:#5d6278; --line:#e1e4ee; --hero:#23264a;
+  --breath:#d9822b; --voice:#6a4bc4; --good:#2f8a5b; --ok:#c98a12; --work:#c43c5c; --warn:#c43c5c;
+  --display:"Fraunces",Georgia,serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
   color-scheme:light;
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%}
-main{max-width:760px;margin:0 auto;padding:20px 16px 48px;display:flex;flex-direction:column;gap:16px}
-h1{font-family:var(--display);font-weight:500;font-size:30px;line-height:1.1;margin:0 0 6px}
-h2{font-family:var(--display);font-weight:500;font-size:21px;margin:0;text-wrap:balance}
-.lede{margin:0 0 12px;max-width:60ch;color:var(--muted)}
-.tonic{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.tonic label{font-weight:600;font-size:13px}
-select{font:inherit;font-family:var(--mono);font-size:14px;padding:7px 8px;border:1px solid #b9c4c1;border-radius:6px;background:#fff;color:var(--ink)}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px}
-.steps{margin:0;padding-left:20px;max-width:60ch}.steps li+li{margin-top:4px}
-.btn{font:inherit;font-size:13px;font-weight:500;padding:7px 12px;border:1px solid #b9c4c1;border-radius:6px;background:#fff;color:var(--ink);cursor:pointer;line-height:1.4}
-.btn:disabled{opacity:.45}.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
-.big{font:inherit;font-size:17px;font-weight:600;padding:14px;border:0;border-radius:8px;background:var(--ink);color:#fff;cursor:pointer;width:100%}
-.big.stop{background:var(--warn)}
-button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--breath);outline-offset:2px}
-.live canvas{display:block;border:1px solid var(--line);border-radius:6px}
-.livebar{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-family:var(--mono);font-size:13px;margin-top:4px}
-.livenote{font-size:20px;font-weight:500}
-.busytxt{font-weight:600;margin:0}.err{color:#a3270c;margin:0}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15.5px;line-height:1.55;-webkit-text-size-adjust:100%}
+main{max-width:760px;margin:0 auto;padding:0 14px 56px;display:flex;flex-direction:column;gap:16px}
+.hero{background:var(--hero);color:#fff;margin:0 -14px;padding:28px 22px 24px;border-radius:0 0 22px 22px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;border:28px solid rgba(217,130,43,.18);pointer-events:none}
+.brand{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#c9cbe6;font-weight:600}
+.logo{width:14px;height:14px;border-radius:50%;background:var(--breath);box-shadow:0 0 0 4px rgba(217,130,43,.25)}
+h1{font-family:var(--display);font-weight:600;font-size:40px;line-height:1.05;margin:8px 0 8px;letter-spacing:-.01em}
+h2{font-family:var(--display);font-weight:600;font-size:21px;margin:0;text-wrap:balance}
+.lede{margin:0 0 16px;max-width:52ch;color:#d5d7ee}
+.tonic{display:flex;gap:8px;align-items:center}.tonic label{font-weight:600;font-size:13px;color:#c9cbe6}
+.hero select{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.25)}
+.hero select option{color:var(--ink)}
+select{font:inherit;font-family:var(--mono);font-size:14px;padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink)}
+.card{background:var(--card);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:0 1px 2px rgba(29,32,51,.05),0 6px 20px rgba(29,32,51,.05)}
+.eyebrow{font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.rec .eyebrow+h2{margin-top:-8px}
+.steps{margin:0;padding-left:20px;max-width:60ch;color:var(--muted)}.steps li+li{margin-top:4px}
+.btn{font:inherit;font-size:13.5px;font-weight:500;padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink);cursor:pointer;line-height:1.4}
+.btn:hover:not(:disabled){border-color:var(--ink)}.btn:disabled{opacity:.4}
+.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.ghost{background:var(--bg);border-color:transparent}
+.big{font:inherit;font-size:17px;font-weight:600;padding:16px;border:0;border-radius:14px;background:var(--breath);color:#fff;cursor:pointer;width:100%;box-shadow:0 6px 16px rgba(217,130,43,.35)}
+.big.stop{background:var(--work);box-shadow:0 6px 16px rgba(196,60,92,.35)}
+button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--voice);outline-offset:2px}
+.live canvas{display:block;border-radius:10px;background:#fff;border:1px solid var(--line)}
+.livebar{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-family:var(--mono);font-size:13px;margin-top:6px}
+.livenote{font-size:22px;font-weight:500;color:var(--voice)}
+.busytxt{font-weight:600;margin:0}.err{color:var(--work);margin:0}
+.summary{border-top:5px solid var(--voice)}
+.headline{font-family:var(--display);font-size:25px;line-height:1.2;font-weight:600;margin:0;text-wrap:balance}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12.5px;color:#fff;font-weight:500}
+.dot.st-good{background:var(--good)}.dot.st-ok{background:var(--ok)}.dot.st-work{background:var(--work)}
+.sline{margin:0;max-width:62ch}
+.tip{background:#fbf3e9;border-radius:12px;padding:12px 14px;border-left:4px solid var(--breath)}
+.tiplabel{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a85e14}
+.tip p{margin:2px 0 0}
 .bar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between}
-.who{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.fname{font-weight:600}
-.tag{font-size:12px;color:var(--muted);border:1px dashed #9aa7a4;border-radius:4px;padding:1px 6px}
+.who{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.tag{font-size:12px;color:var(--muted);background:var(--bg);border-radius:999px;padding:2px 10px}
 .btns{display:flex;gap:6px;align-items:center}.grp{display:inline-flex}
-.grp .btn{border-radius:0;margin-left:-1px}.grp .btn:first-child{border-radius:6px 0 0 6px}.grp .btn:last-child{border-radius:0 6px 6px 0}
+.grp .btn{border-radius:0;margin-left:-1px}.grp .btn:first-child{border-radius:999px 0 0 999px}.grp .btn:last-child{border-radius:0 999px 999px 0}
 .panes{position:relative}canvas{display:block;touch-action:pan-y}
-.plabel{position:absolute;left:46px;font-size:11px;font-weight:600;color:var(--muted);background:rgba(255,255,255,.85);padding:0 5px;border-radius:3px;pointer-events:none}
-.scroll{width:100%;margin:0;accent-color:var(--ink)}
+.plabel{position:absolute;left:46px;font-size:11px;font-weight:600;color:var(--muted);background:rgba(255,255,255,.9);padding:0 6px;border-radius:4px;pointer-events:none}
+.scroll{width:100%;margin:0;accent-color:var(--voice)}
 .read{font-family:var(--mono);font-size:12.5px;color:var(--muted);min-height:20px}
 .hint{color:var(--muted);font-size:12.5px;margin:0;max-width:65ch}
-.phrases{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
-.phrase{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px}
-.phead{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start}
-.pnum{background:var(--voice);color:#fff;font-family:var(--mono);font-weight:500;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center}
-.ptitle{font-weight:600}.ppat{font-size:13.5px}
+.phrasesec{display:flex;flex-direction:column;gap:10px}.phrasesec>.bar{padding:4px 4px 0}
+.phrases{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.phrase{background:var(--card);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;border-top:5px solid var(--line);box-shadow:0 1px 2px rgba(29,32,51,.05),0 6px 20px rgba(29,32,51,.05)}
+.phrase.st-good{border-top-color:var(--good)}.phrase.st-ok{border-top-color:var(--ok)}.phrase.st-work{border-top-color:var(--work)}
+.phead{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+.pnum{background:var(--ink);color:#fff;font-family:var(--mono);font-weight:500;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.st-good .pstatus{color:var(--good)}.st-ok .pstatus{color:#9a6a0c}.st-work .pstatus{color:var(--work)}
+.pstatus{font-weight:700;font-size:15px}.psub{font-size:13px;color:var(--muted)}
+.plines{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.plines li{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:start;font-size:14.5px}
+.mk{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;color:#fff;margin-top:2px}
+.pl-good .mk{background:var(--good)}.pl-ok .mk{background:var(--ok)}.pl-work .mk{background:var(--work)}
+.linkbtn{align-self:flex-start;background:none;border:0;padding:0;font:inherit;font-size:13px;font-weight:600;color:var(--voice);cursor:pointer}
+.nums{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:10px}
 .meter{display:grid;grid-template-columns:72px 1fr 30px;gap:8px;align-items:center;font-size:13px}
-.track{height:10px;background:#e4eae8;border-radius:5px;overflow:hidden}.fill{height:100%;background:var(--breath);border-radius:5px}.fill.alt{opacity:.55}
+.track{height:8px;background:var(--bg);border-radius:4px;overflow:hidden}.fill{height:100%;background:var(--breath);border-radius:4px}.fill.alt{opacity:.5}
 .num{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
-dl{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:0;border-top:1px solid var(--line);padding-top:8px}
+dl{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:0}
 dt{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}dd{margin:0;font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.notes p{margin:0;max-width:65ch}
+.notes summary{cursor:pointer;font-weight:600}.notes p{margin:0;max-width:65ch}
+@media (prefers-reduced-motion:no-preference){.phrase,.summary{transition:box-shadow .2s}}
 </style>
 </head>
 <body>
@@ -669,6 +699,65 @@ function exampleSession(tonic) {
 }
 if (typeof module !== 'undefined') module.exports = { processMotion, findPhrases, exampleSession, breathAt };
 
+// ---------- Plain-English reading of a take ----------
+const TIPS = {
+  shallow: 'Before each phrase, breathe in slowly through the nose until the belly pushes the phone outward, then start the note.',
+  early: 'Sing the phrase as if the breath has to last twice as long. The belly should sink slowly the whole way through, not drop at the start.',
+  held: 'Let the belly come in gently while singing instead of bracing it out. The breath only supports the voice when it is being used.',
+  uneven: 'Hold one note on "aa" for eight counts and aim for the belly line to fall in a straight, smooth slope.',
+  pressed: 'Hum the phrase on a soft "ng", then open to "aa" without changing the feeling. This takes the squeeze off the throat.',
+  breathy: 'Start the note with a gentle, clear onset, as if saying "uh-oh" quietly, so less air escapes around the tone.',
+  strain: 'Sing it softer and a little lower first. Strain usually eases when the volume comes down, then build back up.',
+  wobble: 'Keep the volume steady by keeping the belly release steady. Practise one long note at a single comfortable loudness.'
+};
+function describePhrase(p, hasBr) {
+  const out = [], issues = [], m = p.m;
+  if (hasBr) {
+    if (p.inhale < 15) { out.push(['work', 'Almost no belly movement before this phrase. The breath probably came from the chest or shoulders.']); issues.push('shallow'); }
+    else if (p.inhale < 40) { out.push(['ok', 'A small breath before this phrase. There was room to fill more.']); issues.push('shallow'); }
+    else out.push(['good', 'A full belly breath before singing.']);
+    if (p.inhale >= 15) {
+      if (/Steady/.test(p.pattern)) out.push(['good', 'The breath went out slowly and evenly while singing. This is what supported singing looks like.']);
+      else if (/first quarter/.test(p.pattern)) { out.push(['work', 'Most of the breath went out in the first moments, leaving little for the rest of the phrase.']); issues.push('early'); }
+      else if (/stayed out/.test(p.pattern)) { out.push(['ok', 'The belly stayed out and hardly moved while singing, as if the breath was being held rather than used.']); issues.push('held'); }
+      else { out.push(['ok', 'The breath went out in uneven bursts rather than one smooth release.']); issues.push('uneven'); }
+    }
+  }
+  if (m) {
+    if (m.h1h2 < 2) { out.push(['work', 'The tone sounds pressed: the deep base of the voice is weak against the overtones above it. That is the throat squeezing.']); issues.push('pressed'); }
+    else if (m.h1h2 > 12 && m.hnr < 15) { out.push(['ok', 'The tone is light and breathy, with air escaping around the sound.']); issues.push('breathy'); }
+    else out.push(['good', 'The tone is balanced, with a solid base and no squeeze.']);
+    if (m.shimmer > 3 || m.jitter > 1.2) { out.push(['work', 'The voice wavers from one vibration to the next, a common sign of strain.']); issues.push('strain'); }
+    else if (m.loudSd > 4.5) { out.push(['ok', 'The volume rises and falls a lot within the phrase.']); issues.push('wobble'); }
+  }
+  const status = out.some(x => x[0] === 'work') ? 'work' : out.some(x => x[0] === 'ok') ? 'ok' : 'good';
+  return { lines: out, issues, status, label: { good: 'Well supported', ok: 'Partly supported', work: 'Needs work' }[status] };
+}
+function describeTake(phrases, hasBr) {
+  if (!phrases.length) return { headline: 'No sung phrases were found in this take.', lines: ['Sing for at least a second at a time, close enough to the phone for the sound line to move clearly.'], tip: null };
+  const d = phrases.map(p => describePhrase(p, hasBr)), n = phrases.length;
+  const good = d.filter(x => x.status === 'good').length, work = d.filter(x => x.status === 'work').length;
+  const headline = good === n ? (n === 1 ? 'This phrase was well supported.' : 'Every phrase was well supported.')
+    : work === n ? (n === 1 ? 'This phrase needs work on support.' : 'Every phrase needs work on support.')
+    : good + ' of ' + n + ' phrases ' + (good === 1 ? 'was' : 'were') + ' well supported.';
+  const lines = [];
+  if (hasBr && n > 1) {
+    let hi = 0, lo = 0; phrases.forEach((p, i) => { if (p.inhale > phrases[hi].inhale) hi = i; if (p.inhale < phrases[lo].inhale) lo = i; });
+    const a = phrases[hi].m, b = phrases[lo].m;
+    if (hi !== lo && a && b && phrases[hi].inhale - phrases[lo].inhale > 20) {
+      if (a.h1h2 - b.h1h2 > 3 || b.shimmer - a.shimmer > 1.5) lines.push('The tone was clearer in phrase ' + (hi + 1) + ', after a full breath, than in phrase ' + (lo + 1) + ', after a smaller one. That link between breath and tone is the thing to point out.');
+      else lines.push('Phrase ' + (hi + 1) + ' had the fullest breath and phrase ' + (lo + 1) + ' the smallest, but the tone stayed much the same in both.');
+    }
+  }
+  if (!hasBr) lines.push('There was no belly movement data, so this reading covers the voice only.');
+  const count = {}; d.forEach(x => x.issues.forEach(k => count[k] = (count[k] || 0) + 1));
+  const order = ['shallow', 'early', 'pressed', 'strain', 'held', 'uneven', 'breathy', 'wobble'];
+  const top = order.filter(k => count[k]).sort((x, y) => count[y] - count[x])[0];
+  if (top) lines.push({ shallow: 'The main thing holding the sound back is the breath before each phrase.', early: 'The main thing holding the sound back is spending the breath too fast.', pressed: 'The main thing to work on is the squeeze in the throat.', strain: 'The main thing to work on is strain in the voice.', held: 'The main thing to work on is using the breath instead of holding it.', uneven: 'The main thing to work on is a smoother release of breath.', breathy: 'The main thing to work on is a cleaner start to each note.', wobble: 'The main thing to work on is keeping the volume steady.' }[top]);
+  return { headline, lines, tip: top ? TIPS[top] : null, details: d };
+}
+if (typeof module !== 'undefined') module.exports = { describePhrase, describeTake };
+
 const h = React.createElement;
 const { useState, useEffect, useRef, useMemo } = React;
 const SW = ['S', 'R1', 'R2', 'G2', 'G3', 'M1', 'M2', 'P', 'D1', 'D2', 'N2', 'N3'];
@@ -772,7 +861,8 @@ function Recorder({ onDone, tonic }) {
   }
   useEffect(() => () => { if (R.current) stop(); }, []);
   return h('section', { className: 'card rec' },
-    h('h2', null, 'Record a take'),
+    h('div', { className: 'eyebrow' }, 'New take'),
+    h('h2', null, 'Record'),
     h('ol', { className: 'steps' },
       h('li', null, 'Hold the phone flat against the belly, just above the navel, with one hand. Keep the hand still.'),
       h('li', null, 'Press start. Breathe in, sing a phrase, breathe in again, sing the next.'),
@@ -781,7 +871,7 @@ function Recorder({ onDone, tonic }) {
       h('canvas', { ref: cvRef, style: { width: '100%', height: '150px' } }),
       h('div', { className: 'livebar' }, h('span', null, info.t.toFixed(0) + ' s'), h('span', { className: 'livenote' }, info.note || '–'), h('span', { style: { color: info.motion ? css('--breath') : css('--warn') } }, info.motion ? 'belly movement ↑ out' : 'no motion sensor data'))),
     state === 'busy' ? h('p', { className: 'busytxt' }, 'Analysing…')
-      : h('button', { id: 'rec-btn', className: 'big' + (state === 'rec' ? ' stop' : ''), onClick: state === 'rec' ? stop : start }, state === 'rec' ? 'Stop' : 'Start recording'),
+      : h('button', { id: 'rec-btn', className: 'big' + (state === 'rec' ? ' stop' : ''), onClick: state === 'rec' ? stop : start }, state === 'rec' ? '■  Stop' : '●  Start recording'),
     msg && h('p', { className: 'err' }, msg));
 }
 
@@ -864,7 +954,7 @@ function Viewer({ s, tonic, sel, setSel }) {
   if (hover != null) { const i = Math.max(0, Math.min(an.nF - 1, Math.round((hover * SR - WIN / 2) / HOP))), f = an.f0[i]; read = hover.toFixed(1) + ' s · ' + (f ? swara(f, tonic) : 'no pitch') + (hasBr ? ' · belly ' + Math.round(breathAt(s.br, hover)) : ''); }
   return h('section', { className: 'card' },
     h('div', { className: 'bar' },
-      h('div', { className: 'who' }, h('span', { className: 'fname' }, s.name), s.example && h('span', { className: 'tag' }, 'synthetic example')),
+      h('div', { className: 'who' }, h('h2', null, 'The take'), s.example && h('span', { className: 'tag' }, 'synthetic example')),
       h('div', { className: 'btns' },
         h('button', { id: 'play', className: 'btn primary', onClick: () => playT != null ? stop() : play(sel) }, playT != null ? 'Stop' : sel ? 'Play selection' : 'Play'),
         h('span', { className: 'grp' }, h('button', { id: 'zin', className: 'btn', onClick: () => zoom(0.5) }, 'In'), h('button', { id: 'zout', className: 'btn', onClick: () => zoom(2) }, 'Out'), h('button', { id: 'zall', className: 'btn', disabled: !zoomed, onClick: () => setView([0, s.dur]) }, 'All')))),
@@ -879,44 +969,61 @@ function Viewer({ s, tonic, sel, setSel }) {
 }
 
 const fx = (v, d, u) => (v == null || isNaN(v)) ? 'n/a' : (v < 0 ? '−' : '') + Math.abs(v).toFixed(d) + (u || '');
-function Phrase({ p, k, tonic, hasBr, onPlay }) {
-  const m = p.m;
-  return h('article', { className: 'phrase' },
-    h('div', { className: 'phead' }, h('span', { className: 'pnum' }, k + 1), h('div', null, h('div', { className: 'ptitle' }, p.len.toFixed(1) + ' s' + (m ? ' around ' + swara(m.pitch, tonic).split(' ')[0] : '')), hasBr && h('div', { className: 'ppat' }, p.pattern)),
-      h('button', { id: 'play-p' + k, className: 'btn', onClick: onPlay }, 'Play')),
-    hasBr && h('div', { className: 'meter' }, h('span', null, 'Breath in'), h('div', { className: 'track' }, h('div', { className: 'fill', style: { width: Math.min(100, p.inhale) + '%' } })), h('span', { className: 'num' }, Math.round(Math.min(100, p.inhale)))),
-    hasBr && h('div', { className: 'meter' }, h('span', null, 'Released'), h('div', { className: 'track' }, h('div', { className: 'fill alt', style: { width: Math.min(100, p.release) + '%' } })), h('span', { className: 'num' }, Math.round(Math.min(100, p.release)))),
-    m && h('dl', null,
-      h('div', null, h('dt', null, 'H1−H2'), h('dd', null, fx(m.h1h2, 1, ' dB'))),
-      h('div', null, h('dt', null, 'Clarity'), h('dd', null, fx(m.hnr, 0, ' dB'))),
-      h('div', null, h('dt', null, 'Loudness'), h('dd', null, '±' + fx(m.loudSd, 1, ' dB'))),
-      h('div', null, h('dt', null, 'Shimmer'), h('dd', null, fx(m.shimmer, 1, ' %')))));
+const MARK = { good: '✓', ok: '•', work: '!' };
+function Phrase({ p, k, tonic, hasBr, desc, onPlay }) {
+  const m = p.m, [open, setOpen] = useState(false);
+  return h('article', { className: 'phrase st-' + desc.status },
+    h('div', { className: 'phead' },
+      h('span', { className: 'pnum' }, k + 1),
+      h('div', null, h('div', { className: 'pstatus' }, desc.label), h('div', { className: 'psub' }, p.len.toFixed(1) + ' s' + (m ? ' · around ' + swara(m.pitch, tonic).split(' ')[0] : ''))),
+      h('button', { id: 'play-p' + k, className: 'btn ghost', onClick: onPlay, 'aria-label': 'Play phrase ' + (k + 1) }, '▶ Play')),
+    h('ul', { className: 'plines' }, desc.lines.map((l, i) => h('li', { key: i, className: 'pl-' + l[0] }, h('span', { className: 'mk', 'aria-hidden': 'true' }, MARK[l[0]]), h('span', null, l[1])))),
+    h('button', { id: 'nums-p' + k, className: 'linkbtn', 'aria-expanded': open, onClick: () => setOpen(!open) }, open ? 'Hide numbers' : 'Show numbers'),
+    open && h('div', { className: 'nums' },
+      hasBr && h('div', { className: 'meter' }, h('span', null, 'Breath in'), h('div', { className: 'track' }, h('div', { className: 'fill', style: { width: Math.min(100, p.inhale) + '%' } })), h('span', { className: 'num' }, Math.round(Math.min(100, p.inhale)))),
+      hasBr && h('div', { className: 'meter' }, h('span', null, 'Released'), h('div', { className: 'track' }, h('div', { className: 'fill alt', style: { width: Math.min(100, p.release) + '%' } })), h('span', { className: 'num' }, Math.round(Math.min(100, p.release)))),
+      m && h('dl', null,
+        h('div', null, h('dt', null, 'H1−H2'), h('dd', null, fx(m.h1h2, 1, ' dB'))),
+        h('div', null, h('dt', null, 'Clarity'), h('dd', null, fx(m.hnr, 0, ' dB'))),
+        h('div', null, h('dt', null, 'Loudness'), h('dd', null, '±' + fx(m.loudSd, 1, ' dB'))),
+        h('div', null, h('dt', null, 'Shimmer'), h('dd', null, fx(m.shimmer, 1, ' %'))))));
 }
-
+function Summary({ take, s }) {
+  const counts = { good: 0, ok: 0, work: 0 }; (take.details || []).forEach(d => counts[d.status]++);
+  return h('section', { className: 'card summary' },
+    h('div', { className: 'eyebrow' }, 'What I heard · ' + s.name),
+    h('p', { className: 'headline' }, take.headline),
+    take.details && h('div', { className: 'dots', 'aria-hidden': 'true' }, take.details.map((d, i) => h('span', { key: i, className: 'dot st-' + d.status }, i + 1))),
+    take.lines.map((l, i) => h('p', { key: i, className: 'sline' }, l)),
+    take.tip && h('div', { className: 'tip' }, h('div', { className: 'tiplabel' }, 'Try next'), h('p', null, take.tip)));
+}
 function App() {
   const [tonic, setTonic] = useState(220), [sel, setSel] = useState(null);
-  const [s, setS] = useState(() => { const ex = exampleSession(220); return makeSession(ex.samples, ex.motion, 'Two phrases, Sa Ga Pa', true); });
+  const [s, setS] = useState(() => { const ex = exampleSession(220); return makeSession(ex.samples, ex.motion, 'Example: two phrases, Sa Ga Pa', true); });
   const hasBr = !!(s.br && s.br.b);
+  const take = useMemo(() => describeTake(s.phrases, hasBr), [s]);
   function exportCsv() {
     const rows = ['time_s,belly_0_100,pitch_hz,loudness_db'];
     for (let i = 0; i < s.an.nF; i++) { const t = frameTime(i); rows.push([t.toFixed(2), hasBr ? breathAt(s.br, t).toFixed(1) : '', s.an.f0[i] ? s.an.f0[i].toFixed(1) : '', s.an.inten[i].toFixed(1)].join(',')); }
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([rows.join('\n')], { type: 'text/csv' })); a.download = 'breath-take.csv'; document.body.appendChild(a); a.click(); a.remove();
   }
   return h('main', null,
-    h('header', null, h('h1', null, 'Sadhana Breath Lab'),
-      h('p', { className: 'lede' }, 'The phone rests on the belly and records two things at once: how the belly moves, and the voice. See whether each phrase starts from a real breath and how that breath is spent.'),
-      h('div', { className: 'tonic' }, h('label', { htmlFor: 'tonic' }, 'Sa (shruti)'), h('select', { id: 'tonic', value: tonic, onChange: e => setTonic(+e.target.value) }, TONICS.map(t => h('option', { key: t.label, value: t.hz }, t.label + ' · ' + t.hz.toFixed(1) + ' Hz'))))),
+    h('header', { className: 'hero' },
+      h('div', { className: 'brand' }, h('span', { className: 'logo', 'aria-hidden': 'true' }), h('span', null, 'Sadhana')),
+      h('h1', null, 'Breath Lab'),
+      h('p', { className: 'lede' }, 'Rest the phone on the belly and sing. It listens to the voice and feels the breath, then tells you in plain words how each phrase was supported.'),
+      h('div', { className: 'tonic' }, h('label', { htmlFor: 'tonic' }, 'Sa'), h('select', { id: 'tonic', value: tonic, onChange: e => setTonic(+e.target.value) }, TONICS.map(t => h('option', { key: t.label, value: t.hz }, t.label + ' · ' + t.hz.toFixed(0) + ' Hz'))))),
     h(Recorder, { tonic, onDone: (samples, motion, name) => { setSel(null); setS(makeSession(samples, motion, name, false)); } }),
+    h(Summary, { take, s }),
     h(Viewer, { s, tonic, sel, setSel }),
-    h('section', { className: 'card' },
-      h('div', { className: 'bar' }, h('h2', null, s.phrases.length ? 'Phrase by phrase' : 'No sung phrases found'), h('button', { id: 'csv', className: 'btn', onClick: exportCsv }, 'Export CSV')),
-      hasBr ? h('p', { className: 'hint' }, 'Breath figures run from 0 to 100, where 100 is the widest belly movement in this take.') : h('p', { className: 'hint' }, 'This take has no belly movement data, so only the voice measures are shown.'),
-      h('div', { className: 'phrases' }, s.phrases.map((p, k) => h(Phrase, { key: k, p, k, tonic, hasBr, onPlay: () => { const r = [Math.max(0, p.t0 - 0.2), Math.min(s.dur, p.t1 + 0.2)]; r.play = true; setSel(r); } })))),
-    h('section', { className: 'card notes' },
-      h('h2', null, 'Reading it'),
-      h('p', null, 'A phrase sung from the base usually shows a clear rise in the belly line before the note, then a slow, even fall while she sings. A flat line, or a sharp drop in the first second, means the breath was shallow or spent at once, and the throat tends to take over.'),
-      h('p', null, 'On the voice side, a low H1−H2 with high shimmer and wavering loudness is the pattern of a squeezed tone. Compare her phrases against each other, or against a take of your own.'),
-      h('p', { className: 'hint' }, 'The belly line comes from how gravity shifts across the phone’s accelerometer axes as the belly tilts it, smoothed over half a second. It shows movement, not litres of air. A moving hand, walking, or a loose grip will show up as breath. The line is drawn so that it falls while she sings; a take with almost no movement can come out upside down. Voice analysis follows Praat: autocorrelation pitch, 75 Hz floor, 0.45 voicing threshold. Sensor capture follows phyphox: raw x, y, z with timestamps, plotted live, exportable.')));
+    s.phrases.length > 0 && h('section', { className: 'phrasesec' },
+      h('div', { className: 'bar' }, h('h2', null, 'Phrase by phrase'), h('button', { id: 'csv', className: 'btn ghost', onClick: exportCsv }, 'Export CSV')),
+      h('div', { className: 'phrases' }, s.phrases.map((p, k) => h(Phrase, { key: k, p, k, tonic, hasBr, desc: take.details[k], onPlay: () => { const r = [Math.max(0, p.t0 - 0.2), Math.min(s.dur, p.t1 + 0.2)]; r.play = true; setSel(r); } })))),
+    h('details', { className: 'card notes' },
+      h('summary', null, 'How it works and what it can’t tell you'),
+      h('p', null, 'The belly line comes from how breathing tilts the phone, so it shows movement, not litres of air. A moving hand or loose grip will look like breath. Breath sizes are compared within one take, from 0 to 100.'),
+      h('p', null, 'The tone reading compares the deepest part of the voice with the overtones above it. A squeezed throat weakens the base. It shifts with the note and the vowel, so compare like with like, and let your ear be the final judge.'),
+      h('p', { className: 'hint' }, 'Voice analysis follows Praat: autocorrelation pitch, 75 Hz floor, 0.45 voicing threshold, jitter and shimmer as in its voice report. Sensor capture follows phyphox: raw x, y, z with timestamps, plotted live, exportable.')));
 }
 ReactDOM.createRoot(document.getElementById('root')).render(h(App));
 
